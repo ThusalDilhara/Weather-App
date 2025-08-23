@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import WeatherCard  from "./WeatherCard";
+import axios from "axios";
 
 const mainPage = () => {
   const [data, setData] = useState([]);
@@ -10,10 +11,9 @@ const mainPage = () => {
       try {
          setLoading(true);
          setError(null);
-         const res = await fetch("http://localhost:5000/api/weather");
-         if (!res.ok) throw new Error("Failed to fetch weather data");
-         const json = await res.json();
-         setData(json);
+         const res = await axios.get("http://localhost:5000/api/weather");
+         if (res.status !== 200) throw new Error("Failed to fetch weather data");
+         setData(res.data);
       } catch (e) {
          setError(e.message || "Failed to load weather");
       } finally {
@@ -43,7 +43,7 @@ const mainPage = () => {
              </div>
            </header>
      
-           <main className="max-w-5xl mx-auto px-4 py-6">
+           <div className="max-w-5xl mx-auto px-4 py-6">
              {loading && (
                <div className="text-center py-16">Loading weather…</div>
              )}
@@ -56,9 +56,9 @@ const mainPage = () => {
      
              {!loading && !error && (
                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                 {data.map((item, idx) => (
+                 {data.map((item, id) => (
                    <WeatherCard
-                     key={idx}
+                     key={id}
                      name={item.name}
                      description={item.description}
                      temp={item.temperature}
@@ -66,10 +66,10 @@ const mainPage = () => {
                  ))}
                </div>
              )}
-           </main>
+           </div>
      
            <footer className="py-8 text-center text-xs text-slate-500">
-             Data cached on server for 5 minutes.
+              2021 Fidenz Technologies
            </footer>
          </div>
   )
