@@ -9,13 +9,18 @@ const mainPage = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { isAuthenticated,isLoading,user,error:authError } = useAuth0();
+  const { isAuthenticated,isLoading,user,error:authError,getAccessTokenSilently } = useAuth0();
 
   const load = async ()=>{
       try {
          setLoading(true);
          setError(null);
-         const res = await axios.get("http://localhost:5000/api/weather");
+        const token = await getAccessTokenSilently();
+         const res = await axios.get("http://localhost:5000/api/weather", {
+           headers: {
+             Authorization: `Bearer ${token}`
+           }
+         });
          if (res.status !== 200) throw new Error("Failed to fetch weather data");
          setData(res.data);
       } catch (e) {
