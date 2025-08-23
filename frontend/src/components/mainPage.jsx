@@ -1,11 +1,15 @@
 import { useEffect, useState } from "react";
 import WeatherCard  from "./WeatherCard";
 import axios from "axios";
+import { useAuth0 } from '@auth0/auth0-react'
+import LoginButton from "./LoginButton";
+import LogoutButton from "./LogOutButton";
 
 const mainPage = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { isAuthenticated,isLoading,user,error:authError } = useAuth0();
 
   const load = async ()=>{
       try {
@@ -22,9 +26,31 @@ const mainPage = () => {
    }
 
      
-  useEffect(() => {
-    load();
-  }, []);
+   useEffect(() => {
+    if (isAuthenticated) 
+       load();
+
+   }, [isAuthenticated]);
+
+   if (isLoading) {
+    return (
+       <div className="min-h-screen grid items-center">Authenticating…</div>
+    );
+  }
+
+
+   if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen grid place-items-center bg-slate-50">
+        <div className="bg-white p-8 rounded-2xl shadow max-w-md text-center">
+          <h1 className="text-2xl font-bold mb-4">Weather Dashboard</h1>
+          <p className="text-slate-600 mb-6">Please log in to view weather data.</p>
+          <LoginButton />
+          {authError && <p className="mt-4 text-red-600 text-sm">{String(authError)}</p>}
+        </div>
+      </div>
+    );
+  }
 
 
   return (
@@ -33,13 +59,14 @@ const mainPage = () => {
              <div className="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
                <h1 className="text-xl md:text-2xl font-bold">Weather Dashboard</h1>
                <div className="flex items-center gap-3">
-                 <button
-                   onClick={load}
-                   className="px-4 py-2 rounded-xl bg-slate-900 text-white text-sm hover:bg-slate-800"
-                 >
-                   Refresh
-                 </button>
-               </div>
+            <button
+              onClick={load}
+              className="px-4 py-2 rounded-xl bg-slate-900 text-white text-sm hover:bg-slate-800"
+            >
+              Refresh
+            </button>
+            <LogoutButton />
+          </div>
              </div>
            </header>
      
