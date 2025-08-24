@@ -116,7 +116,7 @@ const mainPage = () => {
         </div>
       </div>
 
-      <div className="max-w-5xl mx-auto px-4 py-6">
+      <div className="max-w-6xl mx-auto px-4 py-6">
         {loading && (
           <div className="text-center py-16">
             <div className="flex flex-col items-center space-y-4">

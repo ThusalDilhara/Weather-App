@@ -4,6 +4,7 @@ import {
   Sun,
   CloudRain,
   CloudSnow,
+  Send
 } from "lucide-react";
 
 export default function WeatherCard({
@@ -42,43 +43,71 @@ export default function WeatherCard({
     });
   };
 
+   const formatTemp = (temp) => {
+    return `${Math.round(temp)}°C`;
+    };
 
      return (
-    <div className="max-w-md mx-auto mt-10 rounded-2xl overflow-hidden shadow-lg">
-      {/* Top section */}
+    <div className="max-w-sm mx-auto mt-10 rounded-2xl overflow-hidden shadow-lg ">
       <div className="bg-[#071027] text-white p-6 relative">
         <div className="flex justify-between items-start">
           <div>
-            <h2 className="text-lg font-semibold">{name}</h2>
-            <p className="text-sm">{formatTime(Date.now())}</p>
+            <h2 className="text-2xl font-semibold">{name}</h2>
+            <p className="text-[11px] mt-0.5">
+              {new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}, {new Date().toLocaleDateString([], { day: "2-digit", month: "short"})}
+            </p>
           </div>
-          <div className="text-4xl font-bold">{temperature}°C</div>
+          <div className="text-4xl font-bold">{formatTemp(temperature)}</div>
         </div>
 
-        <div className="flex items-center gap-2 mt-2">
+        <div className="flex items-center justify-between mt-2">
+          <div>
+
           {getWeatherIcon(description)}
           <span className="text-sm">{description}</span>
-        </div>
+          </div>
+      
+          <div>
 
-        <div className="flex justify-between mt-3 text-xs">
-          <p>Temp Min: {tempMin}°C</p>
-          <p>Temp Max: {tempMax}°C</p>
+          <p className="text-sm">Temp Min: {formatTemp(tempMin)}</p>
+          <p className="text-sm">Temp Max: {formatTemp(tempMax)}</p>
+          </div>
+
         </div>
       </div>
+      <div className="bg-slate-800 text-slate-200 p-4 grid grid-cols-3 gap-3 text-xs">
+     <div className="flex flex-col space-y-2 relative">
+    <div className="flex justify-between items-center">
+      <span>Pressure:</span> <span>{pressure} hPa</span>
+    </div>
+    <div className="flex justify-between items-center">
+      <span>Humidity:</span> <span>{humidity}%</span>
+    </div>
+    <div className="flex justify-between items-center">
+      <span>Visibility:</span> <span>{visibility} km</span>
+    </div>
+    {/* Vertical line */}
+    
+  </div>
 
-      {/* Bottom section */}
-      <div className="bg-slate-800 text-slate-200 p-4 grid grid-cols-2 gap-3 text-xs">
-        <div>
-          <p>Pressure: {pressure}hPa</p>
-          <p>Humidity: {humidity}%</p>
-          <p>Visibility: {visibility}km</p>
-        </div>
-        <div>
-          <p>{windSpeed}m/s {windDegree} Degree</p>
-          <p>Sunrise: {formatTime(sunrise)}am</p>
-          <p>Sunset: {formatTime(sunset)}pm</p>
-        </div>
-      </div>
+  <div className="flex flex-col space-y-2 relative">
+    <div className="flex-col justify-between place-items-center text-center">
+      <Send className="w-4 h-4" />
+      <span className="">{windSpeed}m/s {windDegree}°</span>
+    </div>
+    
+  </div>
+
+  <div className="flex flex-col space-y-2">
+    <div className="flex justify-between items-center">
+      <span>Sunrise:</span> <span>{formatTime(sunrise)} am</span>
+    </div>
+    <div className="flex justify-between items-center">
+      <span>Sunset:</span> <span>{formatTime(sunset)} pm</span>
+    </div>
+  </div>
+</div>
+
     </div>
    );
 
