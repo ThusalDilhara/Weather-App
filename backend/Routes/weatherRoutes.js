@@ -30,6 +30,15 @@ router.get('/', async (req, res) => {
         name: response.data.name,
         description: response.data.weather[0].description,
         temperature: response.data.main.temp,
+        humidity: response.data.main.humidity,
+        pressure: response.data.main.pressure,
+        visibility: response.data.visibility,
+        sunrise: response.data.sys.sunrise,
+        sunset: response.data.sys.sunset,
+        tempMin: response.data.main.temp_min,
+        tempMax: response.data.main.temp_max,
+        windSpeed: response.data.wind.speed,
+        windDegree: response.data.wind.deg
       });
      
     }
