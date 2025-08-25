@@ -25,8 +25,6 @@ const checkJwt = jwt({
   algorithms: ['RS256'],
 });
 
-// health route (public)
-app.get('/health', (req, res) => res.json({ ok: true }));
 
 // protect weather route
 app.use('/api/weather', checkJwt, weatherRoutes);

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Cloud,
   Sun,
@@ -86,7 +85,7 @@ export default function WeatherCard({
     <div className="flex justify-between items-center">
       <span>Visibility:</span> <span>{visibility} km</span>
     </div>
-    {/* Vertical line */}
+    
     
   </div>
 
