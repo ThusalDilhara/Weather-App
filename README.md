@@ -20,7 +20,7 @@ Users can log in, view real-time weather data, and authenticate securely using J
 weather-app/
 │── backend/        # Express.js API
 │   ├── package.json
-│   ├── index.hs
+│   ├── index.js
 │   └── Routes
 │
 │── frontend/       # React app
@@ -56,7 +56,7 @@ cd backend
 npm install
 ```
 
-* Create a `.env` file in `backend/`:
+* Create a `.env` file in `backend/` and get API key from OpenWeatherMap:
 
 ```env
 OPENWEATHER_API_KEY=<your_openweathermap_api_key>
