@@ -138,7 +138,7 @@ const mainPage = () => {
             <Cloud className="w-8 h-8 text-white" />
             <Sun className="w-4 h-4 text-yellow-300 absolute -top-1 -right-1" />
           </div>
-          <h1 className="text-3xl font-medium font-primary text-white">Weather DashBoard</h1>
+          <h1 className="text-3xl font-medium font-primary text-white">Weather App</h1>
         </div>
 
         {/* Search + Add City */}
