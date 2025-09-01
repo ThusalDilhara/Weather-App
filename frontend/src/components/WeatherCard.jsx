@@ -6,7 +6,7 @@ import {
   Send
 } from "lucide-react";
 
-export default function WeatherCard({
+const WeatherCard=({
   name,
   description,
   temperature,
@@ -19,11 +19,13 @@ export default function WeatherCard({
   tempMax,
   windSpeed,
   windDegree,
-}) {
+}) =>{
   
 
   // Pick an icon dynamically based on description
   const getWeatherIcon = (desc) => {
+
+     if (!desc) return <Cloud className="w-10 h-10 text-slate-400" />;
     const lower = desc.toLowerCase();
     if (lower.includes("sun") || lower.includes("clear"))
       return <Sun className="w-10 h-10 text-yellow-400" />;
@@ -75,43 +77,44 @@ export default function WeatherCard({
         </div>
       </div>
       <div className="bg-slate-800 text-slate-200 p-4 grid grid-cols-3 gap-3 text-xs">
-     <div className="flex flex-col space-y-2 relative">
-    <div className="flex justify-between items-center">
-      <span>Pressure:</span> <span>{pressure} hPa</span>
-    </div>
-    <div className="flex justify-between items-center">
-      <span>Humidity:</span> <span>{humidity}%</span>
-    </div>
-    <div className="flex justify-between items-center">
-      <span>Visibility:</span> <span>{visibility} km</span>
-    </div>
+       <div className="flex flex-col space-y-2 relative">
+         <div className="flex justify-between items-center">
+           <span>Pressure:</span> <span>{pressure} hPa</span>
+         </div>
+         <div className="flex justify-between items-center">
+           <span>Humidity:</span> <span>{humidity}%</span>
+         </div>
+         <div className="flex justify-between items-center">
+           <span>Visibility:</span> <span>{visibility} km</span>
+         </div>
+      
     
+       </div>
+
+      <div className="flex flex-col space-y-2 relative">
+       <div className="flex-col justify-between place-items-center text-center">
+        <Send className="w-4 h-4" />
+        <span className="">{windSpeed}m/s {windDegree}°</span>
+       </div>
     
-  </div>
+      </div>
+  
+     <div className="flex flex-col space-y-2">
+       <div className="flex justify-between items-center">
+         <span>Sunrise:</span> <span>{formatTime(sunrise)} am</span>
+       </div>
+       <div className="flex justify-between items-center">
+         <span>Sunset:</span> <span>{formatTime(sunset)} pm</span>
+       </div>
+     </div>
+    </div>
 
-  <div className="flex flex-col space-y-2 relative">
-    <div className="flex-col justify-between place-items-center text-center">
-      <Send className="w-4 h-4" />
-      <span className="">{windSpeed}m/s {windDegree}°</span>
-    </div>
-    
-  </div>
-
-  <div className="flex flex-col space-y-2">
-    <div className="flex justify-between items-center">
-      <span>Sunrise:</span> <span>{formatTime(sunrise)} am</span>
-    </div>
-    <div className="flex justify-between items-center">
-      <span>Sunset:</span> <span>{formatTime(sunset)} pm</span>
-    </div>
-  </div>
-</div>
-
-    </div>
+   </div>
    );
 
   }
 
 
+export default WeatherCard;
 
 

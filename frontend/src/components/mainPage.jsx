@@ -5,6 +5,7 @@ import { useAuth0 } from '@auth0/auth0-react'
 import LoginButton from "./LoginButton";
 import LogoutButton from "./LogOutButton";
 import Background from "../assets/background.png";
+import cities from "../cities.json"
 
 import { Cloud, Sun,Menu, X} from 'lucide-react';
 
@@ -14,21 +15,81 @@ const mainPage = () => {
   const [error, setError] = useState(null);
   const { isAuthenticated,isLoading,user,error:authError,getAccessTokenSilently } = useAuth0();
   const [menuOpen, setMenuOpen] = useState(false);
+  
+  const cityTTL = {
+    Colombo: 60000,    
+    Tokyo: 300000,     
+    Liverpool: 120000, 
+    Paris: 180000,     
+    Sydney: 60000,     
+    Boston: 300000,    
+    Shanghai: 180000,  
+    Oslo: 60000        
+  };
+
+
+  const writeToCache = (key, data, ttl) => {
+    const cacheEntry = {
+      data,
+      expiry: Date.now() + ttl
+    };
+    localStorage.setItem(key, JSON.stringify(cacheEntry));
+  };
+
+   const readFromCache = (key) => {
+    const itemStr = localStorage.getItem(key);
+    if (!itemStr) return null;
+
+    const item = JSON.parse(itemStr);
+    if (Date.now() > item.expiry) {
+      localStorage.removeItem(key);
+      return null;
+    }
+    return item.data;
+  };
+
+
+
+  const loadCityWeather = async (city, token) => {
+    const cityUrl = `http://localhost:5000/api/weather?cityId=${city.CityCode}`;
+
+    // Read from cache first
+    const cached = readFromCache(cityUrl);
+    if (cached) return cached;
+
+   
+    const res = await axios.get(cityUrl, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    if (res.status !== 200) throw new Error("Failed to fetch weather");
+
+    
+    const ttl = cityTTL[city.CityName] || 60000;
+    writeToCache(cityUrl, res.data, ttl);
+
+    return res.data;
+  };
 
   const load = async ()=>{
       try {
          setLoading(true);
          setError(null);
-        const token = await getAccessTokenSilently();
-        console.log("Token:", token);
-         const res = await axios.get("http://localhost:5000/api/weather", {
-           headers: {
-             Authorization: `Bearer ${token}`
+         const token = await getAccessTokenSilently();
+         console.log("Token:", token);
+
+        const results = await Promise.all(cities.map(async city => {
+          try {
+                return await loadCityWeather(city, token);
+             } catch {
+              return null; 
            }
-         });
-         if (res.status !== 200) throw new Error("Failed to fetch weather data");
-         setData(res.data);
-      } catch (e) {
+         }));
+         console.log("Results:", results);
+         setData(results);
+        
+         
+    }
+       catch (e) {
          setError(e.message || "Failed to load weather");
       } finally {
          setLoading(false);

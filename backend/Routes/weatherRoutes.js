@@ -12,20 +12,23 @@ const cache = new NodeCache({ stdTTL: 300 });
 
 router.get('/', async (req, res) => {
   try {
-    // Check cache first
-    if (cache.has('weatherData')) {
-      console.log('Serving from cache');
-      return res.json(cache.get('weatherData'));
-    }
-    console.log('Request came');
+    const { cityId } = req.query; 
+    let cityList = cities;
 
-    //  const url=`https://api.openweathermap.org/data/2.5/group?id=${testCityCodes}&units=metric&appid=${apiKey}`;
+    if (cityId) {
+      // Filter for the requested city only
+      cityList = cities.filter(city => city.CityCode === cityId);
+      if (cityList.length === 0) {
+        return res.status(404).json({ error: 'City not found' });
+      }
+    }
 
     const weatherData = [];
-    for (const city of cities) { 
+
+    for (const city of cityList) {
       const url = `https://api.openweathermap.org/data/2.5/weather?id=${city.CityCode}&units=metric&appid=${apiKey}`;
-      console.log('API URL:', url);
       const response = await axios.get(url);
+
       weatherData.push({
         name: response.data.name,
         description: response.data.weather[0].description,
@@ -40,11 +43,11 @@ router.get('/', async (req, res) => {
         windSpeed: response.data.wind.speed,
         windDegree: response.data.wind.deg
       });
-     
     }
-
-    console.log('Processed Weather Data:', weatherData);
-    cache.set('weatherData', weatherData);
+    console.log('Weather Data:', weatherData);
+   if (cityId) {
+      return res.json(weatherData[0]);
+    }
     res.json(weatherData);
   } catch (err) {
     console.error('Error:', err.response?.data || err.message);
