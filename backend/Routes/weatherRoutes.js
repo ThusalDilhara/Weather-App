@@ -13,21 +13,20 @@ const cache = new NodeCache({ stdTTL: 300 });
 router.get('/', async (req, res) => {
   try {
     const { cityId } = req.query; 
-    let cityList = cities;
 
-    if (cityId) {
-      // Filter for the requested city only
-      cityList = cities.filter(city => city.CityCode === cityId);
-      if (cityList.length === 0) {
-        return res.status(404).json({ error: 'City not found' });
-      }
+    if (!cityId) {
+      return res.status(400).json({ error: 'cityId is required' });
     }
 
-   
+    const city = cities.find(city => city.CityCode === cityId);
+     if (!city) {
+      return res.status(404).json({ error: 'City not found' });
+     }
 
-    for (const city of cityList) {
+    
       const url = `https://api.openweathermap.org/data/2.5/weather?id=${city.CityCode}&units=metric&appid=${apiKey}`;
       const response = await axios.get(url);
+      
 
       res.json({
         name: response.data.name,
@@ -43,7 +42,7 @@ router.get('/', async (req, res) => {
         windSpeed: response.data.wind.speed,
         windDegree: response.data.wind.deg
       });
-    }
+    
    
    
    

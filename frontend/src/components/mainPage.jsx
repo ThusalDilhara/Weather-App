@@ -89,7 +89,7 @@ const mainPage = () => {
               return null; 
            }
          }));
-         console.log("Results:", results);
+         console.log("final Response:", results);
          setData(results);
         
          
