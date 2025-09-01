@@ -45,10 +45,8 @@ router.get('/', async (req, res) => {
       });
     }
     console.log('Weather Data:', weatherData);
-   if (cityId) {
-      return res.json(weatherData[0]);
-    }
-    res.json(weatherData);
+   
+    res.json(weatherData[0]);
   } catch (err) {
     console.error('Error:', err.response?.data || err.message);
     res.status(500).json({ error: 'Internal Server Error', details: err.response?.data || err.message });
