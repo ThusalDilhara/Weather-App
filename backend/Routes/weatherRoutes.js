@@ -23,13 +23,13 @@ router.get('/', async (req, res) => {
       }
     }
 
-    const weatherData = [];
+   
 
     for (const city of cityList) {
       const url = `https://api.openweathermap.org/data/2.5/weather?id=${city.CityCode}&units=metric&appid=${apiKey}`;
       const response = await axios.get(url);
 
-      weatherData.push({
+      res.json({
         name: response.data.name,
         description: response.data.weather[0].description,
         temperature: response.data.main.temp,
@@ -44,9 +44,9 @@ router.get('/', async (req, res) => {
         windDegree: response.data.wind.deg
       });
     }
-    console.log('Weather Data:', weatherData);
    
-    res.json(weatherData[0]);
+   
+   
   } catch (err) {
     console.error('Error:', err.response?.data || err.message);
     res.status(500).json({ error: 'Internal Server Error', details: err.response?.data || err.message });

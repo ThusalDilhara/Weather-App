@@ -55,7 +55,11 @@ const mainPage = () => {
 
     // Read from cache first
     const cached = readFromCache(cityUrl);
-    if (cached) return cached;
+    if (cached){ 
+      
+      console.log("serving from chache", cached);
+      return cached
+    };
 
    
     const res = await axios.get(cityUrl, {
@@ -63,7 +67,8 @@ const mainPage = () => {
     });
     if (res.status !== 200) throw new Error("Failed to fetch weather");
 
-    
+
+    console.log("serving from api:", res.data);
     const ttl = cityTTL[city.CityName] || 60000;
     writeToCache(cityUrl, res.data, ttl);
 
